@@ -1,0 +1,138 @@
+body {
+    font-family: "PT Sans Narrow", sans-serif;
+    text-align: center;
+    padding: 20px;
+    overflow-y: scroll;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    font-family: "Play", sans-serif;
+}
+
+header {
+    border-bottom: 1px dotted black;
+}
+
+#logo {
+    width: 350px;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline-block;
+}
+
+nav ul li:after {
+    content: " |";
+}
+
+nav ul li:last-child:after {
+    content: "";
+}
+
+.hidden {
+    display: none;
+}
+
+table,
+.content-container {
+    margin: 0 auto;
+}
+
+table td {
+    text-align: left;
+}
+
+#gravatar {
+    border-radius: 20px;
+}
+
+.content-container {
+    max-width: 600px;
+}
+
+a {
+    color: black;
+}
+
+a:hover,
+a.active {
+    color: brown;
+}
+
+p {
+    line-height: 1.2em;
+}
+
+section.page {
+    position: relative;
+    width: 100%;
+}
+
+#technologies table {
+    width: 190px;
+    margin-bottom: 20px;
+    vertical-align: top;
+}
+
+#technologies table td:nth-child(2) {
+    text-align: right;
+}
+
+#work .item {
+    border: 1px dotted black;
+    width: 490px;
+    margin-bottom: 10px;
+    background-color: white;
+}
+
+#work .item img {
+    width: 100%;
+}
+
+#work-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+#work-container p {
+    text-align: left;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.social-container * {
+    vertical-align: top;
+}
+
+.social-button {
+    font-size: 25px;
+}
+
+@media screen and (max-width:768px) {
+    #work .item,
+    #logo {
+        width: 100%;
+    }
+}
+
+@media screen and (min-width:768px) and (max-width:1050px) {
+    #work .item {
+        width: 49%;
+    }
+}
+
+@media screen and (min-width:768px) {
+    #technologies table {
+        display: inline-block;
+        width: auto;
+    }
+}
