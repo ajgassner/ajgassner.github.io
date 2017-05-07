@@ -40,19 +40,36 @@
             </ul>
         </nav>
     </header>
-    <section class="page default" id="contact">
-        <h2>Alexander Josef Gassner, M.Sc.</h2>
-        <h3><i class="fa fa-envelope" aria-hidden="true"></i> <a href="mailto:hello@agsolutions.at">hello@agsolutions.at</a></h3>
+    <section class="page default" id="contact" itemscope itemtype="http://schema.org/LocalBusiness">
+        <h2 itemprop="name">Alexander Josef Gassner, M.Sc.</h2>
 
-        <p><i class="fa fa-home" aria-hidden="true"></i> Langseitenstraße 9/1/4<br>A-3012 Wolfsgraben</p>
-        <p><i class="fa fa-phone-square" aria-hidden="true"></i> +43 (0)664 / 44 939 47</p>
+        <h3>
+            <i class="fa fa-envelope" aria-hidden="true"></i>
+            <a href="mailto:hello@agsolutions.at" title="Email senden" itemprop="email">hello@agsolutions.at</a>
+        </h3>
+
+        <p itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+            <i class="fa fa-home" aria-hidden="true"></i>
+            <span itemprop="streetAddress">Langseitenstraße 9/1/4</span><br>
+            A-<span itemprop="postalCode">3012</span>
+            <span itemprop="addressLocality">Wolfsgraben</span><br>
+            <span itemprop="addressCountry">Österreich</span>
+        </p>
+
+        <p>
+            <a href="tel:+436644493947" title="Rufen Sie mich an">
+                <i class="fa fa-phone-square" aria-hidden="true"></i>
+                <span itemprop="telephone">+43 (0)664 / 44 939 47</span>
+            </a>
+            <span class="hidden" itemprop="url">http://agsolutions.at/</span>
+        </p>
 
         <p>
             Mitglied der <a href="http://wko.at/" target="_blank">Wirtschaftskammer Österreich</a><br> Fachgruppe für
             <a href="http://ubit.at/" target="_blank">Unternehmensberatung & Informationstechnologie</a>
         </p>
 
-        <img id="gravatar" alt="Alexander Josef Gassner, M.Sc." src="https://www.gravatar.com/avatar/de17a5266f4423b20ee20f7b55e643da?s=150&d=mm"
+        <img id="gravatar" itemprop="logo" alt="Alexander Josef Gassner, M.Sc." src="https://www.gravatar.com/avatar/de17a5266f4423b20ee20f7b55e643da?s=150&d=mm"
         />
         <p class="social-container">
             <a class="github-button" href="https://github.com/ajgassner" aria-label="Follow @ajgassner on GitHub" target="_blank">Follow @ajgassner</a>
@@ -254,11 +271,11 @@
     <section class="page" id="work">
         <h2>Referenzen</h2>
         <div id="work-container">
-            <div class="item">
-                <img src="img/ediving.jpg" alt="TSVÖ Online Services & eDiving" />
-                <img src="img/tsvoe.jpg" alt="TSVÖ Online Services & eDiving" />
-                <h3>TSVÖ Online Services & eDiving</h3>
-                <p>
+            <div class="item" itemscope itemtype="http://schema.org/WebApplication">
+                <img itemprop="screenshot" src="img/ediving.jpg" alt="TSVÖ Online Services & eDiving" />
+                <img itemprop="screenshot" src="img/tsvoe.jpg" alt="TSVÖ Online Services & eDiving" />
+                <h3><span itemprop="name">TSVÖ Online Services</span> & eDiving</h3>
+                <p itemprop="description">
                     Für den österreichischen Tauchsportverband wurde eine Webapplikation erstellt, mit der Mitglieder, Vereine, Ausbildungen,
                     Brevets und weitere für dem Tauchsport relevante Daten bearbeitet werden können. Durch REST-Schnittstellen
                     können diese Daten von externen Anwendungen - z.B. Apps oder Webseiten - gelesen werden. Desweiteren
@@ -269,10 +286,10 @@
                     Prüfungen zu üben und zu lernen.
                 </p>
             </div>
-            <div class="item">
-                <img src="img/grisu.jpg" alt="Grisu NÖ" />
-                <h3>Grisu NÖ</h3>
-                <p>
+            <div class="item" itemscope itemtype="http://schema.org/MobileApplication">
+                <img itemprop="screenshot" src="img/grisu.jpg" alt="Grisu NÖ" />
+                <h3 itemprop="name">Grisu NÖ</h3>
+                <p itemprop="description">
                     Grisu NÖ ist eine mobile App für iOS und Android, die dem Benutzer Informationen zu aktuell laufenden und vergangenen Feuerwehreinsätzen
                     in ganz Niederösterreich bereitstellt. Weitere Funktionen sind Einsatzstatistiken bzw. eine interaktive
                     Karte für Wasserentnahmestellen (Hydrantenplan). Falls der Benutzer Mitglied einer Niederösterreichischen
@@ -284,10 +301,13 @@
                 <p class="text-center"><a href="http://www.ff-wolfsgraben.at/de/aktuelles/allgemeines/newsshow-einsatzapp-grisu-noe" title="Mehr Infos"
                         target="_blank">Mehr Infos</a></p>
             </div>
-            <div class="item">
-                <img src="img/fifty1.jpg" alt="fifty1 GmbH" />
-                <h3>Webseite fifty1 GmbH</h3>
-                <p class="text-center"><a href="https://fifty1.co/" title="Zur fifty1 Webseite" target="_blank">Zur Webseite</a></p>
+            <div class="item" itemscope itemtype="http://schema.org/WebSite">
+                <img itemprop="image" src="img/fifty1.jpg" alt="fifty1 GmbH" />
+                <h3>Webseite <span itemprop="name">fifty1 GmbH</span></h3>
+                <p class="text-center">
+                    <span class="hidden" itemprop="url">https://fifty1.co/</url>
+                    <a href="https://fifty1.co/" title="Zur fifty1 Webseite" target="_blank">Zur Webseite</a>
+                </p>
             </div>
         </div>
     </section>
