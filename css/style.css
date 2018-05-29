@@ -136,3 +136,31 @@ section.page {
         width: auto;
     }
 }
+
+#cookie-info {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: block;
+    padding: 20px;
+    margin: 0;
+    color: white;
+    text-align: center;
+    z-index: 999;
+}
+
+#cookie-info a {
+    color: white;
+}
+
+#cookie-info .clickme {
+    background: white;
+    display: inline-block;
+    padding: 5px;
+    margin-left: 10px;
+    color: black;
+    text-align: center;
+    cursor: pointer;
+}
