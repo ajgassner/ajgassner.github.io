@@ -71,6 +71,12 @@ $(window).on('hashchange', function () {
     }
 });
 
+$("#work video").each(function(i, v) {
+   v.addEventListener('loadeddata', function() {
+     grid.masonry();
+   }, false);
+});
+
 var setCookie = function(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
