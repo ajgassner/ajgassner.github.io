@@ -64,6 +64,23 @@ a.active {
     color: brown;
 }
 
+.button {
+    background-color: black;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: bold;
+}
+
+.button:hover {
+    color: white;
+    background-color: brown;
+}
+
 p {
     line-height: 1.2em;
 }
