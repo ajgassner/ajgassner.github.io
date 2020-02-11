@@ -1,0 +1,53 @@
+baseURL = "https://agsolutions.at/"
+title = "agsolutions - Alexander Josef Gassner, M.Sc. - Software Engineering & IT Consulting"
+disableHugoGeneratorInject = true
+defaultContentLanguage = "de"
+googleAnalytics = "UA-21693340-6"
+disqusShortname = "agsolutions"
+
+[privacy]
+  [privacy.googleAnalytics]
+    anonymizeIP = true
+    respectDoNotTrack = true
+
+[menu]
+  [[menu.main]]
+    name = "Kontakt"
+    url = "/"
+    weight = 1
+  [[menu.main]]
+    name = "Portfolio"
+    url = "/portfolio/"
+    weight = 2
+  [[menu.main]]
+    name = "Referenzen"
+    url = "/referenzen/"
+    weight = 3
+  #[[menu.main]]
+  #  name = "Blog (en)"
+  #  url = "/en/blog/"
+  #  weight = 4
+
+[languages]
+  [languages.de]
+    weight = 1
+    languageCode = "de"
+    languageName = "Deutsch"
+  [languages.en]
+    weight = 2
+    languageCode = "en"
+    languageName = "English"
+
+[params]
+  shortTitle = "agsolutions"
+  description = "Der richtige Ansprechpartner, wenn es sich um das Design, die Implementierung und Wartung von komplexen Softwareprojekten handelt."
+  images = ["apple-touch-icon.png"]
+  keywords = "agsolutions, Alexander, Gassner, Alex, Individualsoftware, IT, Consulting, Softwareprojekte, Individualprogrammierung"
+  dateFormat = "Jan 2, 2006"
+  rssUrl = "/en/blog/index.xml"
+
+[markup]
+  [markup.highlight]
+    style = "friendly"
+
+[taxonomies]

@@ -1,0 +1,6 @@
+{{ $dateTime := .PublishDate.Format "2006-01-02" }}
+{{ $dateFormat := .Site.Params.dateFormat }}
+<div class="inline-block">
+	<i class="fa fa-calendar" aria-hidden="true"></i>
+	<time datetime="{{ $dateTime }}" itemprop="datePublished">{{ .PublishDate.Format $dateFormat }}</time>
+</div>

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="{{ .Site.Language.Lang }}">
+<head>
+	<meta charset="utf-8">
+
+	{{ $title := print .Title " | " .Site.Params.shortTitle }}
+	{{ if .IsHome }}
+		{{ $title = .Site.Title }}
+	{{ end }}
+	<title>{{ $title }}</title>
+
+	<meta name="robots" content="index,follow">
+
+	{{ $description := .Site.Params.description }}
+	{{ if isset .Params "description" }}
+		{{ $description = .Params.description }}
+	{{ end }}
+	<meta name="description" content="{{ $description }}">
+	<meta name="keywords" content="{{ .Site.Params.keywords }}">
+
+	{{ template "_internal/opengraph.html" . }}
+
+	{{ with "apple-touch-icon.png" | absURL }}<link rel="apple-touch-icon" sizes="180x180" href="{{ . }}">{{ end }}
+	{{ with "favicon-32x32.png" | absURL }}<link rel="icon" type="image/png" sizes="32x32" href="{{ . }}">{{ end }}
+	{{ with "favicon-16x16.png" | absURL }}<link rel="icon" type="image/png" sizes="16x16" href="{{ . }}">{{ end }}
+	{{ with "manifest.json" | absURL }}<link rel="manifest" href="{{ . }}">{{ end }}
+	{{ with "safari-pinned-tab.svg" | absURL }}<link rel="mask-icon" href="{{ . }}" color="#5bbad5">{{ end }}
+	{{ with "favicon.ico" | absURL }}<link rel="shortcut icon" href="{{ . }}">{{ end }}
+	<meta name="apple-mobile-web-app-title" content="{{ .Site.Params.shortTitle }}">
+	<meta name="application-name" content="{{ .Site.Params.shortTitle }}">
+	{{ with "browserconfig.xml" | absURL }}<meta name="msapplication-config" content="{{ . }}">{{ end }}
+	<meta name="theme-color" content="#ffffff">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	{{ with "/en/blog/index.xml" | absURL }}<link rel="alternate" type="application/rss+xml" href="{{ . }}" title="{{ $.Site.Title | safeHTML }}" />{{ end }}
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/normalize/7.0.0/normalize.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Carrois+Gothic|Play:700" rel="stylesheet">
+	{{ $style := resources.Get "css/main.css" | minify | fingerprint }}
+	<link rel="stylesheet" href="{{ $style.Permalink }}">
+</head>
+<body>
+<header>
+	{{ partial "header.html" . }}
+</header>
+<main id="main">
+	{{ block "main" . }}{{ end }}
+</main>
+
+<script src="https://cdn.jsdelivr.net/g/jquery@3.2.1"></script>
+{{ $js := resources.Get "js/main.js" | minify | fingerprint }}
+<script src="{{ $js.Permalink }}"></script>
+{{ block "script" . }}{{ end }}
+
+{{ template "_internal/google_analytics.html" . }}
+</body>
+</html>

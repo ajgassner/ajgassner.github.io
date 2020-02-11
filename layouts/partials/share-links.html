@@ -1,0 +1,12 @@
+<div class="inline-block">
+	{{ with .Site.Params.rssUrl | absURL }}<a href="{{ . }}" type="application/rss+xml" target="_blank" title="RSS feed"
+											  class="fa fa-rss"></a>{{ end }}
+	<a href="//www.twitter.com/share?url={{ .Permalink }}&text={{ .Title }}" target="_blank" title="Share on Twitter"
+	   class="fa fa-twitter"></a>
+	<a href="//www.linkedin.com/shareArticle?mini=true&url={{ .Permalink }}&title={{ .Title }}&summary={{ .Params.description }}"
+	   target="_blank" title="Share on LinkedIn" class="fa fa-linkedin"></a>
+	<a href="//www.xing.com/spi/shares/new?url={{ .Permalink }}" target="_blank" title="Share on Xing" class="fa fa-xing"></a>
+	<a href="mailto:?&subject=Interesting article&body={{ .Title }}: {{ .Permalink }}" target="_blank" title="Share with Email"
+	   class="fa fa-envelope"></a>
+	<a href="//www.facebook.com/sharer/sharer.php?u={{ .Permalink }}" target="_blank" title="Share on Facebook" class="fa fa-facebook"></a>
+</div>

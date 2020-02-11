@@ -1,0 +1,198 @@
+body {
+	font-family: "Carrois Gothic", sans-serif;
+	text-align: center;
+	padding: 20px;
+	overflow-y: scroll;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-family: "Play", sans-serif;
+}
+
+header {
+	border-bottom: 1px dotted black;
+}
+
+#logo {
+	width: 350px;
+}
+
+nav ul {
+	list-style: none;
+	text-align: center;
+	padding: 0;
+}
+
+nav ul li {
+	display: inline-block;
+}
+
+nav ul li:after {
+	content: " |";
+}
+
+nav ul li:last-child:after {
+	content: "";
+}
+
+ul {
+	text-align: left;
+	line-height: 1.4em;
+}
+
+.hidden {
+	display: none;
+}
+
+table,
+.content-container {
+	margin: 0 auto;
+}
+
+table td {
+	text-align: left;
+	white-space: nowrap;
+	padding: 5px 10px 5px 0;
+}
+
+.content-container {
+	max-width: 800px;
+}
+
+.content-container.wide {
+	max-width: 1000px;
+}
+
+a {
+	color: black;
+}
+
+a:hover,
+a.active {
+	color: brown;
+}
+
+h1 > a, h2 > a, h3 > a, h4 > a, h5 > a, h6 > a {
+	text-decoration: none;
+}
+
+.button {
+	transition: 0.2s background-color ease;
+	background-color: #fff;
+	border: 2px solid black;
+	color: black;
+	border-radius: 10px;
+	padding: 10px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-weight: bold;
+}
+
+.button:hover {
+	color: white;
+	background-color: grey;
+}
+
+p {
+	line-height: 1.4em;
+	text-align: left;
+}
+
+main {
+	position: relative;
+	width: 100%;
+}
+
+.text-center {
+	text-align: center !important;
+}
+
+#cookie-info {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(0, 0, 0, 0.8);
+	display: block;
+	padding: 20px;
+	margin: 0;
+	color: white;
+	text-align: center;
+	z-index: 999;
+}
+
+#cookie-info a {
+	color: white;
+}
+
+#cookie-info .clickme {
+	background: white;
+	display: inline-block;
+	padding: 5px;
+	margin-left: 10px;
+	color: black;
+	text-align: center;
+	cursor: pointer;
+}
+
+@media screen and (max-width:768px) {
+	#logo {
+		width: 100%;
+	}
+}
+
+/* masonry begin */
+#masonry .item {
+	border: 1px dotted black;
+	width: 490px;
+	margin-bottom: 10px;
+	background-color: white;
+}
+
+#masonry .item img,
+#masonry .item video {
+	width: 100%;
+}
+
+#masonry p,
+#masonry .item h2 {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+@media screen and (max-width: 768px) {
+	#masonry .item {
+		width: 100%;
+	}
+}
+
+@media screen and (min-width: 768px) and (max-width: 1050px) {
+	#masonry .item {
+		width: 49%;
+	}
+}
+/* masonry end */
+
+.highlight > pre {
+	text-align: left;
+	padding: 1em;
+	overflow-x: auto;
+}
+
+.highlight code {
+	font-size: 0.9em;
+}
+
+code,
+pre {
+	font-family: "Source Code Pro", monospace;
+}
+
+.inline-block {
+	display: inline-block;
+}
+
+.dsq-brlink {
+	display: none;
+}

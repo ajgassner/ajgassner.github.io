@@ -2,7 +2,7 @@
     "name": "agsolutions",
     "icons": [
         {
-            "src": "/img/icon/android-chrome-192x192.png",
+            "src": "/android-chrome-192x192.png",
             "sizes": "192x192",
             "type": "image/png"
         }

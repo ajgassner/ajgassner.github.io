@@ -1,0 +1,43 @@
+{{ define "main" }}
+
+{{ if .Params.hideTitle }}
+<p/>
+{{ else }}
+<h2>{{ .Title }}</h2>
+{{ end }}
+<div id="masonry" class="content-container wide">
+	{{ range .Pages.ByPublishDate.Reverse }}
+	<article class="item" itemscope itemtype="http://schema.org/Article">
+		{{ if .Params.images }}
+			<img itemprop="image" src="{{ index .Params.images 0 | absURL }}" alt="{{ .Title }}" />
+		{{ end }}
+		<h2 itemprop="name headline">
+			<a href="{{ .RelPermalink }}" itemprop="url">{{ .Title }}</a>
+		</h2>
+		<div>
+			{{ partial "date.html" . }} |
+			{{ partial "reading-time.html" . }}
+		</div>
+		<p itemprop="description">{{ .Summary }}</p>
+		{{ if .Truncated }}
+		<p class="text-center">
+			<a href="{{.RelPermalink }}" itemprop="url" title="Read more about {{ .Title }}">
+				<i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+				Read More
+			</a>
+		</p>
+		{{ end }}
+	</article>
+	{{ end }}
+</div>
+{{ end }}
+
+{{ define "script" }}
+<script src="https://cdn.jsdelivr.net/g/masonry@4.2.0"></script>
+<script>
+	$("#masonry").masonry({
+		itemSelector: '.item',
+		gutter: 10
+	});
+</script>
+{{ end }}

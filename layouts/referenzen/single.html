@@ -1,0 +1,23 @@
+{{ define "main" }}
+
+<p/>
+<div id="masonry" class="content-container wide">
+{{ .Content }}
+</div>
+{{ end }}
+
+{{ define "script" }}
+<script src="https://cdn.jsdelivr.net/g/masonry@4.2.0"></script>
+<script>
+	var grid = $("#masonry").masonry({
+		itemSelector: '.item',
+		gutter: 10
+	});
+
+	$("#masonry video").each(function (i, v) {
+		v.addEventListener('loadeddata', function () {
+			grid.masonry();
+		}, false);
+	});
+</script>
+{{ end }}
