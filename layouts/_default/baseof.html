@@ -38,8 +38,11 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/normalize/7.0.0/normalize.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Carrois+Gothic|Play:700" rel="stylesheet">
-	{{ $style := resources.Get "css/main.css" | minify | fingerprint }}
-	<link rel="stylesheet" href="{{ $style.Permalink }}">
+
+	{{ $syntaxCss := resources.Get "css/syntax.css" }}
+	{{ $mainCss := resources.Get "css/main.css" }}
+	{{ $bundledCss := slice $syntaxCss $mainCss | resources.Concat "css/bundle.css" | minify | fingerprint }}
+	<link rel="stylesheet" href="{{ $bundledCss.Permalink }}">
 </head>
 <body>
 <header>

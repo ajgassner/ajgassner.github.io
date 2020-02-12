@@ -2,6 +2,7 @@ baseURL = "https://agsolutions.at/"
 title = "agsolutions - Alexander Josef Gassner, M.Sc. - Software Engineering & IT Consulting"
 disableHugoGeneratorInject = true
 defaultContentLanguage = "de"
+pygmentsUseClasses=true
 googleAnalytics = "UA-21693340-6"
 disqusShortname = "agsolutions"
 

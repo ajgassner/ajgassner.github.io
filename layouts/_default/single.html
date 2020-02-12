@@ -2,13 +2,15 @@
 
 <article class="content-container wide" itemscope itemtype="http://schema.org/Article">
 	<h2 itemprop="name headline">{{ .Title }}</h2>
-	<section class="info-social">
-		{{ partial "date.html" . }} |
-		{{ partial "reading-time.html" . }} |
-		{{ partial "share-links.html" . }}
-	</section>
+	<section class="info">
+		{{ partial "date.html" . }}&nbsp;|&nbsp;
+		{{ partial "reading-time.html" . }}</section>
 	<div class="content" itemprop="articleBody">{{ .Content }}</div>
 </article>
+
+<div class="content container wide share-buttons">
+	{{ partial "share-links.html" . }}
+</div>
 
 <div class="content-container wide article-nav">
 	<a class="button" href="{{ .Parent.Permalink }}" title="Go back"><i class="fa fa-th-large" aria-hidden="true"></i> Back to overview</a>
@@ -25,12 +27,8 @@
 </div>
 
 <style>
-	.info-social {
+	.info {
 		margin-bottom: 20px;
-	}
-
-	.info-social a {
-		text-decoration: none;
 	}
 
 	.content img {
@@ -38,12 +36,25 @@
 	}
 
 	.article-nav {
-		margin-top: 10px;
-		margin-bottom: 15px;
+		margin-top: 15px;
+		margin-bottom: 20px;
 	}
 
 	.article-nav .button {
 		margin-top: 5px;
+	}
+
+	.share-buttons {
+		margin-top: 20px;
+	}
+
+	.share-buttons a {
+		margin-right: 20px;
+		text-decoration: none;
+	}
+
+	.share-buttons a:last-child {
+		margin-right: 0;
 	}
 </style>
 {{ end }}

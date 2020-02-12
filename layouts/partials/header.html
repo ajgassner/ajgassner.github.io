@@ -8,7 +8,7 @@
 			{{ $active := or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }}
 			{{ $active = or $active (eq .Name $currentPage.Title) }}
 			{{ $active = or $active (and (eq .Name "Blog (en)") (eq $currentPage.Section "blog")) }}
-			<li><a class="{{ if $active }}active{{end}} animsition-link" href="{{ .URL | absURL }}"><i class="fa fa-arrow-circle-{{ if $active }}down{{ else }}right{{ end }}" aria-hidden="true"></i>&nbsp;{{ .Name }}</a></li>
+			<li><a class="{{ if $active }}active{{end}} animsition-link" href="{{ .URL | absURL }}"><i class="fa fa-arrow-circle-{{ if $active }}down{{ else }}right{{ end }}" aria-hidden="true"></i> {{ .Name }}</a></li>
 		{{ end }}
 	</ul>
 </nav>

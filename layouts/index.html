@@ -4,8 +4,10 @@
 	<h2 itemprop="name">Alexander Josef Gassner, M.Sc.</h2>
 
 	<h3>
-		<i class="fa fa-envelope" aria-hidden="true"></i>
-		<a href="mailto:hello@agsolutions.at" title="Email senden" itemprop="email">hello@agsolutions.at</a>
+		<a href="mailto:hello@agsolutions.at" title="Email senden" itemprop="email">
+			<i class="fa fa-envelope" aria-hidden="true"></i>
+			hello@agsolutions.at
+		</a>
 	</h3>
 
 	<p class="text-center" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
@@ -40,9 +42,9 @@
 		<a href="https://www.wkoecg.at/Web/Ecg.aspx?FirmaID=48b15de7-09cc-4b6a-bd33-3159f4232ecf" target="_blank">
 			<img src="https://www.wkoecg.at/Web/Library/img/ecg.gif" style="border:0" alt="Informationen zu E-Commerce und Mediengesetz">
 		</a>
-		<br><br>
-		{{ with "/datenschutz" | absURL }}<a href="{{ . }}"><i class="fa fa-user-secret" aria-hidden="true"></i> Datenschutz</a>{{ end }} |
-		{{ with "doc/agb.pdf" | absURL }}<a target="_blank" href="{{ . }}"><i class="fa fa-book" aria-hidden="true"></i> AGB</a>{{ end }}
+	</p>
+	<p class="text-center">
+		{{ with "/datenschutz" | absURL }}<a href="{{ . }}"><i class="fa fa-user-secret" aria-hidden="true"></i> Datenschutz</a>{{ end }}&nbsp;|&nbsp;{{ with "doc/agb.pdf" | absURL }}<a target="_blank" href="{{ . }}"><i class="fa fa-book" aria-hidden="true"></i>AGB</a>{{ end }}
 	</p>
 </section>
 
@@ -53,10 +55,6 @@
 
 	.social-container * {
 		vertical-align: top;
-	}
-
-	.social-button {
-		font-size: 25px;
 	}
 </style>
 

@@ -5,6 +5,14 @@ body {
 	overflow-y: scroll;
 }
 
+::selection {
+	background: burlywood;
+}
+
+::-moz-selection {
+	background: burlywood;
+}
+
 h1,h2,h3,h4,h5,h6 {
 	font-family: "Play", sans-serif;
 }
@@ -17,10 +25,17 @@ header {
 	width: 350px;
 }
 
+i.fa:after {
+	white-space: pre;
+	content: " ";
+}
+
 nav ul {
 	list-style: none;
-	text-align: center;
 	padding: 0;
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
 }
 
 nav ul li {
@@ -28,7 +43,8 @@ nav ul li {
 }
 
 nav ul li:after {
-	content: " |";
+	white-space: pre;
+	content: " | ";
 }
 
 nav ul li:last-child:after {
@@ -78,7 +94,7 @@ h1 > a, h2 > a, h3 > a, h4 > a, h5 > a, h6 > a {
 
 .button {
 	transition: 0.2s background-color ease;
-	background-color: #fff;
+	background-color: #e8e8e8;
 	border: 2px solid black;
 	color: black;
 	border-radius: 10px;
@@ -195,4 +211,8 @@ pre {
 
 .dsq-brlink {
 	display: none;
+}
+
+.social-button {
+	font-size: 25px;
 }
