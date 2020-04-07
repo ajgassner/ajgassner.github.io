@@ -1,3 +1,13 @@
 # agsolutions website source code
 
-Run `hugo server --minify` to develop locally.
+Start development server  
+`hugo server --minify`
+
+Cleanup unused resources  
+`hugo --gc`
+
+Create new page  
+`hugo new blog/some-url.md`
+
+Production build  
+`hugo --minify`

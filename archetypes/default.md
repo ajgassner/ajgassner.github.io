@@ -1,7 +1,6 @@
 ---
 title: "{{ replace .Name "-" " " | title }}"
-description: "Text about this post"
+description: "Text about this post (optional)"
 date: {{ .Date }}
-images: ["apple-touch-icon.png"]
 draft: false
 ---

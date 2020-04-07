@@ -24,10 +24,10 @@ disqusShortname = "agsolutions"
     name = "Referenzen"
     url = "/referenzen/"
     weight = 3
-  #[[menu.main]]
-  #  name = "Blog (en)"
-  #  url = "/en/blog/"
-  #  weight = 4
+  [[menu.main]]
+    name = "Blog (en)"
+    url = "/en/blog/"
+    weight = 4
 
 [languages]
   [languages.de]

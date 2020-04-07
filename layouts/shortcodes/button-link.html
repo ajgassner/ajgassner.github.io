@@ -1,0 +1,6 @@
+{{ $title := .Get "title" }}
+{{ $href := .Get "href" }}
+{{ $icon := .Get "icon" }}
+<a class="button" href="{{ $href }}" title="{{ $title }}">
+	<i class="fa {{ $icon }}" aria-hidden="true"></i>{{ .Inner }}
+</a>

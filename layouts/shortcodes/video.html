@@ -1,0 +1,9 @@
+{{ $attributes := .Get "attributes" }}
+{{ $video := .Get "video" }}
+
+{{ with .Page.Resources.GetMatch $video }}
+<video {{ $attributes }}>
+	<source src="{{ .Permalink }}" type="{{ .MediaType }}">
+	Ihr browser unterstützt keine Videos.
+</video>
+{{ end }}

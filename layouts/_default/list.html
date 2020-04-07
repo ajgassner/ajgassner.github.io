@@ -8,11 +8,12 @@
 <div id="masonry" class="content-container wide">
 	{{ range .Pages.ByPublishDate.Reverse }}
 	<article class="item" itemscope itemtype="http://schema.org/Article">
-		{{ if .Params.images }}
-			<img itemprop="image" src="{{ index .Params.images 0 | absURL }}" alt="{{ .Title }}" />
+		{{ with (.Resources.ByType "image").GetMatch "*cover*" }}
+			{{ $image := .Resize "800x" }}
+			<img itemprop="image" src="{{ $image.Permalink }}" alt="{{ .Title }}" />
 		{{ end }}
 		<h2 itemprop="name headline">
-			<a href="{{ .RelPermalink }}" itemprop="url">{{ .Title }}</a>
+			<a href="{{ .Permalink }}" itemprop="url">{{ .Title }}</a>
 		</h2>
 		<div>
 			{{ partial "date.html" . }}&nbsp;|&nbsp;
@@ -21,7 +22,7 @@
 		<p itemprop="description">{{ .Summary }}</p>
 		{{ if .Truncated }}
 		<p class="text-center">
-			<a href="{{.RelPermalink }}" itemprop="url" title="Read more about {{ .Title }}">
+			<a href="{{.Permalink }}" itemprop="url" title="Read more about {{ .Title }}">
 				<i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
 				Read More
 			</a>
