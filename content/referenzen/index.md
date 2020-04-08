@@ -1,6 +1,7 @@
 ---
 title: "Referenzen"
 type: "referenzen"
+description: "agsolutions Projektreferenzen"
 ---
 
 {{< work-item title="LABRequest: Digitale Laboranforderung für Ärzte und Labore" type="WebApplication" video="labrequest.mp4" link="https://www.medcom.at/" >}}
