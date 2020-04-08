@@ -5,6 +5,7 @@ defaultContentLanguage = "de"
 pygmentsUseClasses=true
 googleAnalytics = "UA-21693340-6"
 disqusShortname = "agsolutions"
+enableEmoji = true
 
 [privacy]
   [privacy.googleAnalytics]
