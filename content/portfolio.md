@@ -11,9 +11,10 @@ komplexen Softwareprojekten handelt. Mit einigen Jahren Branchenerfahrung und St
 and der FH OÖ Campus Hagenberg habe ich die Fähigkeit, Softwareprojekte von der Machbarkeits- bzw. 
 Anforderungsanalyse bis hin zur Wartung von Produktivsystemen umzusetzen und zu betreuen.
 
-Neben der Implementierung von Apps und Desktopanwendungen beschäftige ich mich vorwiegend mit der Erstellung
-datenbankgestützter Enterprise-Webapplikationen. Dabei kann auf unterschiedliche Technologien zurückgegriffen
-werden, wobei die Entscheidung immer von den zur Verfügung stehenden Mitteln und dem Einsatzzweck abhängig ist.
+Neben der Umsetzung von Apps und Desktopanwendungen beschäftige ich mich vorwiegend mit der Erstellung
+von ereignisorientierter und datenbankgestützter Enterprise-Webapplikationen. Dabei kann auf unterschiedliche
+Technologien zurückgegriffen werden, wobei die Entscheidung immer von den zur Verfügung stehenden Mitteln
+und dem Einsatzzweck abhängig ist. 
 
 ## Agiles Software-Projektmanagement
 
@@ -29,6 +30,11 @@ automatisiertes Testen & Deployment, statische Codeanalyse und natürlich Versio
 Um die Infrastruktur für Build-, Test- und Produktionssysteme aufzusetzen und instand zu halten, bedarf es
 vertiefte Kenntnisse in der Administration von UNIX und Windows basierten Systemen, welche ich mir im Laufe
 der Zeit angeeignet habe.
+
+Für Cloud-Projekte gibt es keinen standardisierten Ansatz. Jede Kundensituation ist
+anders und bedarf einer genauen Evaluierung und Planung, um bestmöglich von der Cloud zu profitieren.
+Unternehmen, die sich für eine Cloud-Lösung entscheiden, müssen alle Optionen und Möglichkeiten evaluieren und
+verschiedenste Herausforderungen analysieren. Ich unterstütze Sie in allen Phasen von Cloud-basierten Projekten.
 
 ## Technologien
 
