@@ -44,7 +44,15 @@
 		</a>
 	</p>
 	<p class="text-center">
-		{{ with "/datenschutz" | absURL }}<a href="{{ . }}"><i class="fa fa-user-secret" aria-hidden="true"></i> Datenschutz</a>{{ end }}&nbsp;|&nbsp;{{ with "doc/agb.pdf" | absURL }}<a target="_blank" href="{{ . }}"><i class="fa fa-book" aria-hidden="true"></i>AGB</a>{{ end }}
+		{{ with "/datenschutz" | absURL }}
+		<a href="{{ . }}"><i class="fa fa-user-secret" aria-hidden="true"></i> Datenschutz</a>
+		{{ end }}
+		|
+		{{ with "doc/agb.pdf" | absURL }}
+		<a target="_blank" href="{{ . }}"><i class="fa fa-book" aria-hidden="true"></i>AGB</a>
+		{{ end }}
+		|
+		UID: ATU74223716
 	</p>
 </section>
 
