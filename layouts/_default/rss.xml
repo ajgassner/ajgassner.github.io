@@ -35,7 +35,7 @@
 			<description>{{ .Summary | html }}</description>
 			{{ with (.Resources.ByType "image").GetMatch "*cover*" }}
 			{{ $image := .Resize "800x" }}
-			{{ $len := len $image }}
+			{{ $len := len .Content }}
 			<enclosure url="{{ $image.Permalink }}" length="{{ $len }}" type="{{ .MediaType }}"/>
 			{{ end }}
 		</item>
