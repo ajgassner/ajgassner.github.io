@@ -32,10 +32,11 @@
 			<pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
 			{{ with .Site.Author.email }}<author>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}</author>{{end}}
 			<guid>{{ .Permalink }}</guid>
-			<description>{{ .Content | html }}</description>
+			<description>{{ .Summary | html }}</description>
 			{{ with (.Resources.ByType "image").GetMatch "*cover*" }}
 			{{ $image := .Resize "800x" }}
-			<enclosure url="{{ $image.Permalink }}" length="0" type="{{ .MediaType }}"/>
+			{{ $len := len $image }}
+			<enclosure url="{{ $image.Permalink }}" length="{{ $len }}" type="{{ .MediaType }}"/>
 			{{ end }}
 		</item>
 		{{ end }}
