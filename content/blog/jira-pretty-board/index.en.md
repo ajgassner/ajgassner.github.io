@@ -8,10 +8,9 @@ An alternative to the built-in Jira Agile Board. Displays all relevant Sprint da
 It's a convenient pure digital Agile board if your team is not co-located, it can be used as an alternative to
 [physical Possy boards]({{< ref "blog/printing-issues-with-possy" >}}).
 
-
 <!--more-->
 
-![Jira Pretty Board Screencast](screencast.gif)
+{{< figure src="cover.jpg" caption="I'm sorry for this bad quality image, I had to obfuscate it." alt="Jira Pretty Board" >}}
 
 {{< button-link title="Jira Pretty Board on GitHub" href="https://github.com/ajgassner/jira-pretty-board" icon="fa-github" >}}
 	View project on GitHub
