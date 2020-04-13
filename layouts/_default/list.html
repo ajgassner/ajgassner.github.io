@@ -34,11 +34,15 @@
 {{ end }}
 
 {{ define "script" }}
-<script src="https://cdn.jsdelivr.net/g/masonry@4.2.0"></script>
+<script src="https://cdn.jsdelivr.net/combine/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js,npm/imagesloaded@4.1.4"></script>
 <script>
-	$("#masonry").masonry({
+	var $grid = $("#masonry").masonry({
 		itemSelector: '.item',
 		gutter: 10
+	});
+
+	$grid.imagesLoaded().progress(function () {
+		$grid.masonry('layout');
 	});
 </script>
 {{ end }}
