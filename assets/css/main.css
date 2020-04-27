@@ -238,3 +238,24 @@ blockquote:before {
 blockquote p {
 	display: inline;
 }
+
+header {
+	position: relative;
+	display: flex;
+	justify-content: center;
+}
+
+header .header-content {
+	position: relative;
+	z-index: 10;
+	background-color: rgba(255, 255, 255, 0.8)
+}
+
+#particles {
+	position: absolute;
+	left: -20px;
+	top: -20px;
+	width: calc(100% + 40px);
+	height: calc(100% + 20px);
+}
+

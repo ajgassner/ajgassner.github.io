@@ -46,13 +46,16 @@
 </head>
 <body>
 <header>
-	{{ partial "header.html" . }}
+	<div class="header-content">
+		{{ partial "header.html" . }}
+	</div>
+	<div id="particles" aria-hidden="true"></div>
 </header>
 <main id="main">
 	{{ block "main" . }}{{ end }}
 </main>
 
-<script src="https://cdn.jsdelivr.net/g/jquery@3.2.1"></script>
+<script src="https://cdn.jsdelivr.net/combine/npm/jquery@3.5.0,npm/particles.js@2.0.0"></script>
 {{ $js := resources.Get "js/main.js" | minify | fingerprint }}
 <script src="{{ $js.Permalink }}"></script>
 {{ block "script" . }}{{ end }}
