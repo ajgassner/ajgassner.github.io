@@ -17,12 +17,9 @@ h1,h2,h3,h4,h5,h6 {
 	font-family: "Play", sans-serif;
 }
 
-header {
-	border-bottom: 1px dotted black;
-}
-
 #logo {
 	width: 350px;
+	max-width: 350px;
 }
 
 i.fa:after {
@@ -248,7 +245,7 @@ header {
 header .header-content {
 	position: relative;
 	z-index: 10;
-	background-color: rgba(255, 255, 255, 0.8)
+	background-color: rgba(239, 239, 239, 0.8);
 }
 
 #particles {
@@ -257,5 +254,20 @@ header .header-content {
 	top: -20px;
 	width: calc(100% + 40px);
 	height: calc(100% + 20px);
+	background-color: rgb(239, 239, 239);
+	border-bottom: 1px dotted black;
 }
 
+@media screen and (max-width: 768px) {
+	#particles {
+		display: none;
+	}
+
+	header {
+		border-bottom: 1px dotted black;
+	}
+
+	header .header-content {
+		background-color: transparent;
+	}
+}
