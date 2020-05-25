@@ -27,9 +27,8 @@ benefit from the dynamic component model of OSGi." - Dr. Hannes Obweger, Develop
 {{< /work-item >}}
 
 {{< work-item title="TSVÖ Online Services" type="WebApplication" image="tsvoe.jpg" >}}
-Zusätzlich zu der Verwaltungsapplikation "TSVÖ Online Services" wurde eine web-basierte
 Für den österreichischen Tauchsportverband wurde eine Webapplikation erstellt, mit der Mitglieder,
-Vereine, Ausbildungen, Brevets und weitere für dem Tauchsport relevante Daten bearbeitet werden können.
+Vereine, Ausbildungen, Brevets und weitere für den Tauchsport relevante Daten bearbeitet werden können.
 Durch REST-Schnittstellen können diese Daten von externen Anwendungen - z.B. Apps oder Webseiten - gelesen
 werden. Desweiteren können Tauchlehrer ihre Schüler selbst aquirieren bzw. verwalten.
 {{< /work-item >}}
