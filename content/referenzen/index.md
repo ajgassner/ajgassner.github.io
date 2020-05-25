@@ -4,6 +4,15 @@ type: "referenzen"
 description: "agsolutions Projektreferenzen"
 ---
 
+{{< work-item title="Ereignisorientierte & Workflow-gestützte Microservice-Landschaft" type="WebApplication" image="wrw.png"  >}}
+Im Zuge der Digitalisierung der internen Prozesse von Wiener Wohnen - Europas größter Hausverwaltung - werden individuelle Anwendungen
+mit Einsatz modernster Technologien entwickelt, die in nahezu Echtzeit mittels Event-Streaming über Apache Kafka untereinander kommunizieren.
+Die web-basierten Benutzeroberflächen werden mit Vaadin realisiert. Die fachlichen Prozesse sind mithilfe von Camunda BPMN abgebildet.
+Generell wird auf das Spring-Framework in Kombination mit Kotlin gesetzt. Die einzelnen Microservices und Anwendungen werden dabei ausfallsicher
+auf Kubernetes den Anwendern zur Verfügung gestellt. Eine effiziente und zugleich hochmoderne Technologielandschaft, die sowohl
+Entwickler als auch Anwender erfreut.
+{{< /work-item >}}
+
 {{< work-item title="LABRequest: Digitale Laboranforderung für Ärzte und Labore" type="WebApplication" video="labrequest.mp4" link="https://www.medcom.at/" >}}
 Mit der Software der Medcom GmbH werden beleglose Laboranforderungen zuverlässig und sicher erstellt.
 Einer effizienten und ressourcenschonenden Kommunikation zwischen Ärzten und Laboren steht somit
