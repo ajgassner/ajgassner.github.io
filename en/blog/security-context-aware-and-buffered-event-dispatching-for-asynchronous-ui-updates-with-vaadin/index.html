@@ -1,0 +1,137 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><title>Security context aware and buffered event dispatching for asynchronous UI updates with Vaadin | agsolutions</title><meta name=robots content="index,follow"><meta name=description content="Der richtige Ansprechpartner, wenn es sich um das Design, die Implementierung und Wartung von komplexen Softwareprojekten handelt."><meta name=keywords content="agsolutions,Alexander,Gassner,Alex,Individualsoftware,IT,Consulting,Softwareprojekte,Individualprogrammierung"><meta property="og:title" content="Security context aware and buffered event dispatching for asynchronous UI updates with Vaadin"><meta property="og:description" content="Often there is the requirement to push data updates from the server to the client-side. Imagine a chat app
+showing incoming messages in the client&rsquo;s browser. New messages should get displayed automatically without polling,
+the user shouldn&rsquo;t need to trigger some action to fetch new messages.
+In general UI push updates (https://vaadin.com/docs/v15/flow/advanced/tutorial-push-access.html) are pretty easy to
+implement with Vaadin by default, but there are some special cases we have to deal with.
+In this article I want to show you a way to achieve asynchronous UI updates with Vaadin without data flooding or overloading
+the server to client connection when many concurrent push requests arrive. In addition, if you use Spring Security with Vaadin,
+we probably want to have access to the user&rsquo;s security context to authorize push updates before they get dispatched
+to the client&rsquo;s browser."><meta property="og:type" content="article"><meta property="og:url" content="https://agsolutions.at/en/blog/security-context-aware-and-buffered-event-dispatching-for-asynchronous-ui-updates-with-vaadin/"><meta property="og:image" content="https://agsolutions.at/en/blog/security-context-aware-and-buffered-event-dispatching-for-asynchronous-ui-updates-with-vaadin/cover.jpg"><meta property="article:published_time" content="2020-05-28T20:21:44+01:00"><meta property="article:modified_time" content="2020-05-28T20:21:44+01:00"><link rel=apple-touch-icon sizes=180x180 href=https://agsolutions.at/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://agsolutions.at/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=https://agsolutions.at/favicon-16x16.png><link rel=manifest href=https://agsolutions.at/manifest.json><link rel=mask-icon href=https://agsolutions.at/safari-pinned-tab.svg color=#5bbad5><link rel="shortcut icon" href=https://agsolutions.at/favicon.ico><meta name=apple-mobile-web-app-title content="agsolutions"><meta name=application-name content="agsolutions"><meta name=msapplication-config content="https://agsolutions.at/browserconfig.xml"><meta name=theme-color content="#ffffff"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=alternate type=application/rss+xml href=https://agsolutions.at/en/blog/index.xml title="agsolutions - Alexander Josef Gassner, M.Sc. - Software Engineering & IT Consulting"><link rel=stylesheet href=https://cdn.jsdelivr.net/normalize/7.0.0/normalize.css><link rel=stylesheet href=https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css><link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Carrois+Gothic|Play:700" rel=stylesheet><link rel=stylesheet href=https://agsolutions.at/css/bundle.min.334155ebb694a846d8667d136126b927dbed05fb2477992039daa0f21084f12b.css></head><body><header><div class=header-content><a href=https://agsolutions.at/ title=Home><img id=logo src=https://agsolutions.at/img/logo.min.svg alt="agsolutions - Alexander Josef Gassner, M.Sc. - Software Engineering & IT Consulting"></a><h1><span class=hidden>agsolutions - Alexander Josef Gassner, M.Sc. - Software Engineering & IT Consulting</span></h1><nav><ul><li><a class=animsition-link href=https://agsolutions.at/><i class="fa fa-arrow-circle-right" aria-hidden=true></i>Kontakt</a></li><li><a class=animsition-link href=https://agsolutions.at/portfolio/><i class="fa fa-arrow-circle-right" aria-hidden=true></i>Portfolio</a></li><li><a class=animsition-link href=https://agsolutions.at/referenzen/><i class="fa fa-arrow-circle-right" aria-hidden=true></i>Referenzen</a></li><li><a class="active animsition-link" href=https://agsolutions.at/en/blog/><i class="fa fa-arrow-circle-down" aria-hidden=true></i>Blog (en)</a></li></ul></nav></div><div id=particles aria-hidden=true></div></header><main id=main><article class=content-container itemscope itemtype=http://schema.org/Article><h2 itemprop="name headline">Security context aware and buffered event dispatching for asynchronous UI updates with Vaadin</h2><section class=info><div class=inline-block><i class="fa fa-calendar" aria-hidden=true></i><time datetime=2020-05-28 itemprop=datePublished>May 28, 2020</time></div>&nbsp;|&nbsp;<div class=inline-block><i class="fa fa-book" aria-hidden=true></i>5 min read</div></section><div class=content itemprop=articleBody><p>Often there is the requirement to push data updates from the server to the client-side. Imagine a chat app
+showing incoming messages in the client&rsquo;s browser. New messages should get displayed automatically without polling,
+the user shouldn&rsquo;t need to trigger some action to fetch new messages.
+In general UI push updates (<a href=https://vaadin.com/docs/v15/flow/advanced/tutorial-push-access.html>https://vaadin.com/docs/v15/flow/advanced/tutorial-push-access.html</a>) are pretty easy to
+implement with Vaadin by default, but there are some special cases we have to deal with.</p><p>In this article I want to show you a way to achieve asynchronous UI updates with Vaadin without data flooding or overloading
+the server to client connection when many concurrent push requests arrive. In addition, if you use Spring Security with Vaadin,
+we probably want to have access to the user&rsquo;s security context to authorize push updates before they get dispatched
+to the client&rsquo;s browser.</p><p><img src=cover.jpg alt="Push Once"></p><p>First, let me describe the environment of one of my larger projects my colleagues and I working on.
+I think this project is a good production example for server-to-client push. We use Apache Kafka as
+centralized event streaming platform. The whole truth is stored in Kafka in form of domain events.
+We have a few self-contained services (SCS) powered by Vaadin and Spring Boot. For example, when
+a stream listener of some SCS consumes a domain event the users get notified immediately about the
+data change via server push.</p><figure><img src=kafka_producer_consumer.svg alt="Kafka event-driven architecture"><figcaption><p>Roughly represented event-driven architecture</p></figcaption></figure><p>Let&rsquo;s concentrate on the important part. Imagine each inbound event would trigger an asynchronous UI update.
+What do you think happens if many events get consumed concurrently (> 1.000)? - In the best case this causes an unnecessary high server and
+client/browser load, in the worst case our app is going to crash. In event-driven architectures it&rsquo;s common to deal with a huge amount of
+messages/events.</p><p>For Vaadin 14+ there is no existing solution for this problem as I know. Conventional event busses like Guava aren&rsquo;t going to help here,
+because they don&rsquo;t offer buffering or security context awareness out-of-the-box.</p><h3 id=buffering>Buffering</h3><blockquote><p>Buffering (<a href=http://reactivex.io/documentation/operators/buffer.html):>http://reactivex.io/documentation/operators/buffer.html):</a> periodically gather items emitted by an Observable into bundles
+and emit these bundles rather than emitting the items one at a time</p></blockquote><p>To avoid triggering a UI update for each inbound domain event one could use buffering. So we introduced a simple class called
+<code>UiAwareBufferingEventDispatcher</code>. Our event dispatcher collects all incoming events within a defined time span. Then it emits <em>just one</em>
+event containg a list of all collected events to the consuming Vaadin components:</p><figure><img src=event_dispatcher.svg alt="Buffered Event Dispatcher"></figure><p>The consuming component can decide on how to handle the buffered events. For example if the component should trigger a simple
+user notification - like &ldquo;New data available&rdquo; - just the last buffered event in the list will be sufficient most of the time. It depends on the use
+case if none, one, multiple or all events are interesting for the component/view.</p><p>Under the hood we use RxKotlin (<a href=https://github.com/ReactiveX/RxKotlin>https://github.com/ReactiveX/RxKotlin</a>) for buffering, a great library for reactive programming:</p><div class=highlight><pre class=chroma><code class=language-kotlin data-lang=kotlin><span class=k>class</span> <span class=nc>UiAwareBufferingEventDispatcher</span><span class=p>(</span><span class=p>.</span><span class=p>.</span><span class=p>.</span><span class=p>)</span> <span class=p>{</span>
+    <span class=p>.</span><span class=p>.</span><span class=p>.</span>
+    
+    <span class=k>companion</span> <span class=k>object</span> <span class=p>{</span>
+        <span class=k>private</span> <span class=k>const</span> <span class=k>val</span> <span class=py>BUFFER_TIMESPAN_IN_MILLIS</span><span class=p>:</span> <span class=n>Long</span> <span class=p>=</span> <span class=m>500L</span>
+    <span class=p>}</span>
+        
+    <span class=k>private</span> <span class=k>val</span> <span class=py>subject</span> <span class=p>=</span> <span class=n>PublishSubject</span><span class=p>.</span><span class=n>create</span><span class=p>&lt;</span><span class=n>Any</span><span class=p>&gt;</span><span class=p>(</span><span class=p>)</span>
+    <span class=k>private</span> <span class=k>val</span> <span class=py>scheduler</span> <span class=p>=</span> <span class=n>Schedulers</span><span class=p>.</span><span class=n>from</span><span class=p>(</span><span class=n>Executors</span><span class=p>.</span><span class=n>newSingleThreadExecutor</span><span class=p>(</span><span class=p>)</span><span class=p>)</span>
+    <span class=k>private</span> <span class=k>var</span> <span class=py>subscriber</span><span class=p>:</span> <span class=n>Disposable</span><span class=p>?</span> <span class=p>=</span> <span class=k>null</span>
+    
+    <span class=n>@PostConstruct</span>
+    <span class=k>fun</span> <span class=nf>postConstruct</span><span class=p>(</span><span class=p>)</span> <span class=p>{</span>
+        <span class=n>subscribe</span><span class=p>(</span><span class=p>)</span>
+    <span class=p>}</span>
+    
+    <span class=cm>/** dispatch event (Note: runs in caller thread) */</span>
+    <span class=k>fun</span> <span class=nf>dispatch</span><span class=p>(</span><span class=n>event</span><span class=p>:</span> <span class=n>Any</span><span class=p>)</span> <span class=p>{</span>
+        <span class=n>subject</span><span class=p>.</span><span class=n>onNext</span><span class=p>(</span><span class=n>event</span><span class=p>)</span>
+    <span class=p>}</span>
+    
+    <span class=cm>/** start internal subscription to subject (events, which will be dispatched) */</span>
+    <span class=k>private</span> <span class=k>fun</span> <span class=nf>subscribe</span><span class=p>(</span><span class=p>)</span> <span class=p>{</span>
+        <span class=k>if</span> <span class=p>(</span><span class=n>subscriber</span> <span class=p>=</span><span class=p>=</span> <span class=k>null</span> <span class=p>|</span><span class=p>|</span> <span class=n>subscriber</span><span class=o>!!</span><span class=p>.</span><span class=n>isDisposed</span><span class=p>)</span> <span class=p>{</span>
+            <span class=n>subscriber</span> <span class=p>=</span> <span class=n>subject</span><span class=p>.</span><span class=n>observeOn</span><span class=p>(</span><span class=n>scheduler</span><span class=p>)</span>
+                <span class=p>.</span><span class=n>buffer</span><span class=p>(</span><span class=n>BUFFER_TIMESPAN_IN_MILLIS</span><span class=p>,</span> <span class=n>TimeUnit</span><span class=p>.</span><span class=n>MILLISECONDS</span><span class=p>)</span>
+                <span class=p>.</span><span class=n>subscribe</span> <span class=p>{</span>
+                    <span class=c1>// dispatches the buffered events to Vaadin components
+</span><span class=c1></span>                    <span class=k>this</span><span class=p>.</span><span class=n>dispatchToHandlers</span><span class=p>(</span><span class=n>it</span><span class=p>)</span>
+                <span class=p>}</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+    <span class=p>.</span><span class=p>.</span><span class=p>.</span>
+<span class=p>}</span></code></pre></div><p>I have published a demo project containing the full code on GitHub:</p><ul><li><a href=https://github.com/ajgassner/vaadin-playground/tree/master/buffering-event-dispatcher>https://github.com/ajgassner/vaadin-playground/tree/master/buffering-event-dispatcher</a></li><li><a href=https://github.com/ajgassner/vaadin-playground/blob/master/buffering-event-dispatcher/src/main/kotlin/at/agsolutions/demo/UiAwareBufferingEventDispatcher.kt>UiAwareBufferingEventDispatcher.kt</a></li></ul><h3 id=springs-securitycontext-awareness>Spring&rsquo;s SecurityContext awareness</h3><p>Following snippet shows a sample consuming view/component. When an event arrives the session&rsquo;s security context
+is available in the async handler.</p><div class=highlight><pre class=chroma><code class=language-kotlin data-lang=kotlin><span class=n>@Push</span>
+<span class=n>@Route</span><span class=p>(</span><span class=s>&#34;&#34;</span><span class=p>)</span>
+<span class=k>class</span> <span class=nc>MainView</span><span class=p>(</span>
+    <span class=k>private</span> <span class=k>val</span> <span class=py>dispatcher</span><span class=p>:</span> <span class=n>UiAwareBufferingEventDispatcher</span>
+<span class=p>)</span> <span class=p>:</span> <span class=n>VerticalLayout</span><span class=p>(</span><span class=p>)</span> <span class=p>{</span>
+    <span class=p>.</span><span class=p>.</span><span class=p>.</span>
+    <span class=k>override</span> <span class=k>fun</span> <span class=nf>onAttach</span><span class=p>(</span><span class=n>event</span><span class=p>:</span> <span class=n>AttachEvent</span><span class=p>)</span> <span class=p>{</span>
+        <span class=n>dispatcher</span><span class=p>.</span><span class=n>register</span><span class=p>(</span><span class=k>this</span><span class=p>,</span> <span class=n>MessagePostedEvent</span><span class=o>::</span><span class=k>class</span><span class=p>)</span> <span class=p>{</span> <span class=n>bufferedEvents</span> <span class=p>-</span><span class=p>&gt;</span>
+            <span class=c1>// following code doesn&#39;t run in component&#39;s thread,
+</span><span class=c1></span>            <span class=c1>// but the SecurityContext is available!
+</span><span class=c1></span>            <span class=k>val</span> <span class=py>username</span> <span class=p>=</span> <span class=n>SecurityUtils</span><span class=p>.</span><span class=n>user</span><span class=o>?.</span><span class=n>username</span> <span class=o>?:</span> <span class=s>&#34;unknown&#34;</span>
+            <span class=k>val</span> <span class=py>lastEvent</span> <span class=p>=</span> <span class=n>bufferedEvents</span><span class=p>.</span><span class=n>last</span><span class=p>(</span><span class=p>)</span>
+            <span class=n>add</span><span class=p>(</span><span class=n>Span</span><span class=p>(</span><span class=s>&#34;ID: ${lastEvent.id}, Username: $username&#34;</span><span class=p>)</span><span class=p>)</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+
+    <span class=k>override</span> <span class=k>fun</span> <span class=nf>onDetach</span><span class=p>(</span><span class=n>event</span><span class=p>:</span> <span class=n>DetachEvent</span><span class=p>)</span> <span class=p>{</span>
+        <span class=c1>// do not forget to unregister the consumer!
+</span><span class=c1></span>        <span class=n>dispatcher</span><span class=p>.</span><span class=n>unregister</span><span class=p>(</span><span class=k>this</span><span class=p>)</span>
+    <span class=p>}</span>
+    <span class=p>.</span><span class=p>.</span><span class=p>.</span>
+<span class=p>}</span></code></pre></div><p>The event dispatcher is able to access the component&rsquo;s underlying HTTP session and
+sets the thread-bound SecurityContext before the handler gets executed:</p><div class=highlight><pre class=chroma><code class=language-kotlin data-lang=kotlin><span class=n>@Service</span>
+<span class=k>class</span> <span class=nc>UiAwareBufferingEventDispatcher</span><span class=p>(</span>
+    <span class=n>@Qualifier</span><span class=p>(</span><span class=s>&#34;uiTaskExecutor&#34;</span><span class=p>)</span> <span class=k>val</span> <span class=py>taskExecutor</span><span class=p>:</span> <span class=n>AsyncTaskExecutor</span>
+<span class=p>)</span> <span class=p>{</span>
+    <span class=p>.</span><span class=p>.</span><span class=p>.</span>
+   <span class=cm>/**
+</span><span class=cm>     * Sends a list of buffered events to registered handlers and synchronizes call to
+</span><span class=cm>     * view state with session bound security context. Runs within TaskExecutor Thread.
+</span><span class=cm>     * In case the view isn&#39;t bound to a UI or session this call ends
+</span><span class=cm>     * without any exception. (handlers should only update UI and must not trigger any
+</span><span class=cm>     * business logic)
+</span><span class=cm>     */</span>
+    <span class=k>private</span> <span class=k>fun</span> <span class=nf>dispatchWithinUIContext</span><span class=p>(</span>
+        <span class=n>view</span><span class=p>:</span> <span class=n>Component</span><span class=p>,</span> <span class=n>handler</span><span class=p>:</span> <span class=p>(</span><span class=n>List</span><span class=p>&lt;</span><span class=p>*</span><span class=p>&gt;</span><span class=p>)</span> <span class=p>-</span><span class=p>&gt;</span> <span class=n>Unit</span><span class=p>,</span>
+        <span class=n>events</span><span class=p>:</span> <span class=n>List</span><span class=p>&lt;</span><span class=p>*</span><span class=p>&gt;</span>
+    <span class=p>)</span> <span class=p>{</span>
+        <span class=k>val</span> <span class=py>ui</span> <span class=p>=</span> <span class=n>view</span><span class=p>.</span><span class=n>ui</span><span class=p>.</span><span class=n>orElse</span><span class=p>(</span><span class=k>null</span><span class=p>)</span> <span class=o>?:</span> <span class=k>return</span>
+        <span class=k>val</span> <span class=py>vaadinSession</span> <span class=p>=</span> <span class=n>ui</span><span class=p>.</span><span class=n>session</span> <span class=o>?:</span> <span class=k>return</span>
+        <span class=k>val</span> <span class=py>httpSession</span> <span class=p>=</span> <span class=n>vaadinSession</span><span class=p>.</span><span class=n>session</span> <span class=o>?:</span> <span class=k>return</span>
+
+        <span class=k>val</span> <span class=py>sessionSecurityContext</span> <span class=p>=</span> <span class=n>httpSession</span><span class=p>.</span><span class=n>getAttribute</span><span class=p>(</span>
+            <span class=n>HttpSessionSecurityContextRepository</span><span class=p>.</span><span class=n>SPRING_SECURITY_CONTEXT_KEY</span><span class=p>)</span>
+        <span class=k>val</span> <span class=py>securityContextToUse</span> <span class=p>=</span> <span class=k>if</span> <span class=p>(</span><span class=n>sessionSecurityContext</span> <span class=k>is</span> <span class=n>SecurityContext</span><span class=p>)</span> <span class=p>{</span>
+            <span class=n>sessionSecurityContext</span>
+        <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+            <span class=n>SecurityContextHolder</span><span class=p>.</span><span class=n>createEmptyContext</span><span class=p>(</span><span class=p>)</span>
+        <span class=p>}</span>
+
+        <span class=n>ui</span><span class=p>.</span><span class=n>access</span> <span class=p>{</span>
+            <span class=k>val</span> <span class=py>origCtx</span> <span class=p>=</span> <span class=n>SecurityContextHolder</span><span class=p>.</span><span class=n>getContext</span><span class=p>(</span><span class=p>)</span>
+            <span class=k>try</span> <span class=p>{</span>
+                <span class=n>SecurityContextHolder</span><span class=p>.</span><span class=n>setContext</span><span class=p>(</span><span class=n>securityContextToUse</span><span class=p>)</span>
+                <span class=n>handler</span><span class=p>(</span><span class=n>events</span><span class=p>)</span>
+            <span class=p>}</span> <span class=k>catch</span> <span class=p>(</span><span class=n>e</span><span class=p>:</span> <span class=n>UIDetachedException</span><span class=p>)</span> <span class=p>{</span>
+                <span class=c1>// ignore exceptions (just UI updates)
+</span><span class=c1></span>            <span class=p>}</span> <span class=k>catch</span> <span class=p>(</span><span class=n>e</span><span class=p>:</span> <span class=n>Exception</span><span class=p>)</span> <span class=p>{</span>
+                <span class=n>logger</span><span class=p>(</span><span class=p>)</span><span class=p>.</span><span class=n>error</span><span class=p>(</span>
+                    <span class=s>&#34;unexpected exception while handling events {} bound to view {}&#34;</span><span class=p>,</span>
+                    <span class=n>events</span><span class=p>,</span>
+                    <span class=n>view</span><span class=p>,</span>
+                    <span class=n>e</span>
+                <span class=p>)</span>
+            <span class=p>}</span> <span class=k>finally</span> <span class=p>{</span>
+                <span class=n>SecurityContextHolder</span><span class=p>.</span><span class=n>setContext</span><span class=p>(</span><span class=n>origCtx</span><span class=p>)</span>
+            <span class=p>}</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+    <span class=p>.</span><span class=p>.</span><span class=p>.</span>
+<span class=p>}</span></code></pre></div><p>I hope you can benefit a bit from this blog post. The code is MIT-licensed, so feel free to use
+it in your projects!</p></div></article><div class="content container share-buttons"><a href=https://agsolutions.at/en/blog/index.xml type=application/rss+xml target=_blank title="RSS feed" class="social-button fa fa-rss-square"></a><a href="//www.twitter.com/share?url=https%3a%2f%2fagsolutions.at%2fen%2fblog%2fsecurity-context-aware-and-buffered-event-dispatching-for-asynchronous-ui-updates-with-vaadin%2f&text=Security%20context%20aware%20and%20buffered%20event%20dispatching%20for%20asynchronous%20UI%20updates%20with%20Vaadin" target=_blank title="Share on Twitter" class="social-button fa fa-twitter-square"></a><a href="//www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fagsolutions.at%2fen%2fblog%2fsecurity-context-aware-and-buffered-event-dispatching-for-asynchronous-ui-updates-with-vaadin%2f&title=Security%20context%20aware%20and%20buffered%20event%20dispatching%20for%20asynchronous%20UI%20updates%20with%20Vaadin&summary=" target=_blank title="Share on LinkedIn" class="social-button fa fa-linkedin-square"></a><a href="//www.xing.com/spi/shares/new?url=https%3a%2f%2fagsolutions.at%2fen%2fblog%2fsecurity-context-aware-and-buffered-event-dispatching-for-asynchronous-ui-updates-with-vaadin%2f" target=_blank title="Share on Xing" class="social-button fa fa-xing-square"></a><a href="mailto:?&subject=Interesting article&body=Security%20context%20aware%20and%20buffered%20event%20dispatching%20for%20asynchronous%20UI%20updates%20with%20Vaadin: https%3a%2f%2fagsolutions.at%2fen%2fblog%2fsecurity-context-aware-and-buffered-event-dispatching-for-asynchronous-ui-updates-with-vaadin%2f" target=_blank title="Share with Email" class="social-button fa fa-envelope"></a><a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fagsolutions.at%2fen%2fblog%2fsecurity-context-aware-and-buffered-event-dispatching-for-asynchronous-ui-updates-with-vaadin%2f" target=_blank title="Share on Facebook" class="social-button fa fa-facebook-square"></a></div><div class="content-container article-nav"><a class=button href=https://agsolutions.at/en/blog/ title="Go back"><i class="fa fa-th-large" aria-hidden=true></i>Back to overview</a>
+<a class=button href=https://agsolutions.at/en/blog/transforming-vienna-gis-to-wgs84-coordinates/ title=Prev><i class="fa fa-chevron-left" aria-hidden=true></i>Previous article</a></div><div class=content-container><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return;}
+var d=document,s=d.createElement('script');s.async=true;s.src='//'+"agsolutions"+'.disqus.com/embed.js';s.setAttribute('data-timestamp',+new Date());(d.head||d.body).appendChild(s);})();</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.info{margin-bottom:20px}.content img,.content video{max-width:100%}figure{margin:0}figcaption p{margin:0;font-size:.8em;text-align:center}.article-nav{margin-top:15px;margin-bottom:20px}.article-nav .button{margin-top:5px}.share-buttons{margin-top:20px}.share-buttons a{margin-right:20px;text-decoration:none}.share-buttons a:last-child{margin-right:0}</style></main><script src=https://cdn.jsdelivr.net/combine/npm/jquery@3.5.0,npm/particles.js@2.0.0></script><script src=https://agsolutions.at/js/main.min.0eae2c3ac548df9f6d5ebee3cec82adc74b435432125f161ee3696243c5ca7a4.js></script><script type=application/javascript>var dnt=(navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack);var doNotTrack=(dnt=="1"||dnt=="yes");if(!doNotTrack){(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-21693340-6','auto');ga('set','anonymizeIp',true);ga('send','pageview');}</script></body></html>
