@@ -78,6 +78,7 @@ table td {
 
 a {
 	color: black;
+	word-break: break-word;
 }
 
 a:hover,
